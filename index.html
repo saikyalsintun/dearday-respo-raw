@@ -3,213 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Forever | Anniversary</title>
+    <title>Our Anniversary | Forever</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { 
-            --primary: #6d597a; 
-            --accent: #b56576; 
-            --text: #355070;
-            /* Subtle geometric pattern background */
-            --pattern: url('https://www.transparenttextures.com/patterns/cubes.png');
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f8edeb; 
-            background-image: var(--pattern);
-            color: var(--text); 
-            margin: 0; 
-            overflow-x: hidden; 
-            line-height: 1.8;
-        }
+        :root { --primary: #6d597a; --accent: #b56576; --bg: #f8edeb; --text: #355070; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg) url('https://www.transparenttextures.com/patterns/cubes.png'); color: var(--text); margin: 0; text-align: center; line-height: 1.6; }
         
         /* Surprise Overlay */
         #surprise-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--primary); display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 1000;
-            transition: opacity 1.2s ease-in-out, visibility 1.2s;
+            transition: opacity 1s;
         }
-        .gift-box { font-size: 100px; cursor: pointer; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
 
-        /* Glassmorphism Sections */
+        /* Glass Cards */
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px auto;
-            max-width: 700px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 30px; margin: 20px auto; max-width: 700px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); position: relative;
         }
 
-        header { 
-            height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; opacity: 0; 
-            transition: opacity 2s ease-in;
-        }
+        /* Image Containers */
+        .img-container { position: relative; display: inline-block; margin: 10px; }
+        .main-photo { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 8px solid white; }
+        .gallery-img { width: 100%; height: 200px; border-radius: 10px; object-fit: cover; }
 
-        .main-photo { 
-            width: 250px; height: 250px; border-radius: 50%; 
-            object-fit: cover; border: 10px solid white;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+        /* Floating Buttons */
+        .upload-btn {
+            position: absolute; bottom: 10px; right: 10px; background: var(--accent);
+            color: white; border: none; border-radius: 50%; width: 35px; height: 35px;
+            cursor: pointer; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        .delete-btn {
+            position: absolute; top: 10px; right: 10px; background: #333;
+            color: white; border: none; border-radius: 50%; width: 35px; height: 35px;
+            cursor: pointer; font-size: 18px; display: none;
+        }
+        .img-container:hover .delete-btn { display: block; }
 
-        .counter { font-size: 1.8rem; color: var(--accent); font-weight: bold; margin: 20px 0; }
+        /* Inputs */
+        .name-input { background: transparent; border: none; border-bottom: 2px dashed var(--accent); font-size: 2rem; text-align: center; color: var(--text); width: 200px; }
+        .hidden-upload { display: none; }
+
+        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 1s; }
         #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; }
-
-        .timeline { position: relative; padding-left: 30px; border-left: 2px solid var(--accent); text-align: left; }
-        .timeline-point { margin-bottom: 30px; position: relative; }
-        .timeline-point::before {
-            content: ''; position: absolute; left: -39px; top: 10px;
-            width: 16px; height: 16px; background: var(--accent); border-radius: 50%;
-        }
-
-        .quiz-section { background: var(--primary); color: white; border-radius: 15px; padding: 20px; margin-top: 20px; }
-        button { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #e56b6f; transform: translateY(-2px); }
-
-        .footer { padding: 60px 20px; text-align: center; font-style: italic; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <div id="youtube-player"></div>
+<div id="youtube-player"></div>
 
-    <div id="surprise-overlay" onclick="openSurprise()">
-        <div class="gift-box">🎁</div>
-        <h2 style="color: white; margin-top: 20px; font-weight: 300; letter-spacing: 3px;">A SURPRISE FOR YOU</h2>
+<div id="surprise-overlay" onclick="openSurprise()">
+    <div style="font-size: 100px; cursor: pointer;">🎁</div>
+    <h2 style="color: white;">Open Your Surprise</h2>
+</div>
+
+<header id="main-header">
+    <div class="img-container">
+        <img src="https://via.placeholder.com/250" id="hero_photo" class="main-photo">
+        <button class="upload-btn" onclick="triggerUpload('hero_photo')">+</button>
+        <button class="delete-btn" onclick="deletePhoto('hero_photo')">×</button>
     </div>
+    
+    <div style="margin-top: 20px;">
+        <input type="text" id="name1" class="name-input" placeholder="Name 1" onchange="saveName('name1')">
+        <span style="font-size: 2rem;">&</span>
+        <input type="text" id="name2" class="name-input" placeholder="Name 2" onchange="saveName('name2')">
+    </div>
+    <div id="counter" style="font-weight: bold; margin-top: 10px;"></div>
+</header>
 
-    <header id="main-header">
-        <img src="main-photo.jpg" alt="Our Favorite Photo" class="main-photo">
-        <h1 style="font-size: 3rem; margin: 0;">Alex & Sam</h1>
-        <p style="letter-spacing: 4px; text-transform: uppercase; font-size: 0.9rem;">Forever Starts Today</p>
-        <div id="counter" class="counter"></div>
-    </header>
-
-    <div id="main-content" style="display:none; padding: 20px;">
-        
-        <section class="glass-card">
-            <h2 style="color: var(--accent);">Our Journey So Far</h2>
-            <div class="timeline">
-                <div class="timeline-point">
-                    <strong>The Coffee Shop (Aug 12, 2023)</strong>
-                    <p>It started with a spilled latte and a laugh that I'll never forget. You were wearing that blue jacket, and I knew right then that my Tuesdays would never be the same.</p>
-                </div>
-                <div class="timeline-point">
-                    <strong>The First Adventure</strong>
-                    <p>Remember our road trip to the coast? 6 hours of singing badly to 90s hits and getting lost in that small town. It wasn't about the destination; it was about the person in the passenger seat.</p>
-                </div>
-                <div class="timeline-point">
-                    <strong>Saying 'I Love You'</strong>
-                    <p>Under the city lights, after the rain had stopped. It was the easiest thing I've ever said.</p>
-                </div>
+<div id="main-content" style="display: none; padding: 20px;">
+    <section class="glass-card">
+        <h2>Our Memories</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="img-container">
+                <img src="https://via.placeholder.com/300" id="gallery_1" class="gallery-img">
+                <button class="upload-btn" onclick="triggerUpload('gallery_1')">+</button>
+                <button class="delete-btn" onclick="deletePhoto('gallery_1')">×</button>
             </div>
-        </section>
-
-        <section class="glass-card">
-            <h2 style="color: var(--accent);">Moments Captured</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 1">
-                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 2">
-                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 3">
-                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 4">
+            <div class="img-container">
+                <img src="https://via.placeholder.com/300" id="gallery_2" class="gallery-img">
+                <button class="upload-btn" onclick="triggerUpload('gallery_2')">+</button>
+                <button class="delete-btn" onclick="deletePhoto('gallery_2')">×</button>
             </div>
-        </section>
-
-        <section class="glass-card">
-            <h2 style="color: var(--accent);">A Letter To My Best Friend</h2>
-            <p>
-                They say that home is a place, but since meeting you, I've realized that home is actually a person. Thank you for being the calm in my storm, the smile at the end of my long days, and the person I can always count on for an inside joke that no one else understands.
-            </p>
-            <p>
-                I love the way you drink your tea, the way you get excited about the small things, and the way you make me feel like the luckiest person in the world. Here is to many more years of us.
-            </p>
-        </section>
-
-        <section class="glass-card">
-            <h2 style="color: var(--accent);">Small Interaction</h2>
-            <div class="quiz-section">
-                <p id="quiz-txt">Question: What is our "official" favorite movie to watch when it rains?</p>
-                <button onclick="revealQuiz()">Show the Answer</button>
-                <p id="quiz-ans" style="display:none; margin-top:15px; font-weight: bold;">It's 'About Time'! Because we always cry at the same scene.</p>
-            </div>
-        </section>
-
-        <section class="glass-card">
-            <h2 style="color: var(--accent);">Our Future Dreams</h2>
-            <ul style="text-align: left; display: inline-block;">
-                <li>✈️ Visiting the lavender fields in France.</li>
-                <li>🏡 Building that cozy library we always talk about.</li>
-                <li>🐕 Getting a Golden Retriever named 'Noodle'.</li>
-                <li>👵 Growing old and still holding hands in the park.</li>
-            </ul>
-        </section>
-
-        <div class="footer">
-            <p>Every second spent with you is a second well lived.</p>
-            <h3>I Love You More.</h3>
         </div>
-    </div>
+    </section>
 
-    <script>
-        // 1. YouTube Player
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0', width: '0',
-                videoId: 'LjhCEhWiKXk', // Example romantic song ID. Change to yours!
-                events: { 'onReady': onPlayerReady }
+    <input type="file" id="globalUpload" class="hidden-upload" accept="image/*" onchange="processUpload(event)">
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1MAHkEhi84sOhdDPFPrNyJgmETlNU6wyNaTEHzgD7nQhD1ZgcsR3YXGeL8O44NGQ/exec";
+    let activeTarget = "";
+
+    // 1. YouTube Setup
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', { height: '0', width: '0', videoId: 'dQw4w9WgXcQ', events: { 'onReady': () => {} } });
+    }
+
+    // 2. Surprise Reveal
+    function openSurprise() {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        if (player) player.playVideo();
+        document.getElementById('surprise-overlay').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('surprise-overlay').style.visibility = 'hidden';
+            document.getElementById('main-header').style.opacity = '1';
+            document.getElementById('main-content').style.display = 'block';
+        }, 1000);
+        updateCounter();
+    }
+
+    // 3. Photo Handling
+    function triggerUpload(targetId) {
+        activeTarget = targetId;
+        document.getElementById('globalUpload').click();
+    }
+
+    function processUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const base64 = reader.result.split(',')[1];
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "upload",
+                    key: activeTarget,
+                    base64: base64,
+                    type: file.type,
+                    name: file.name
+                })
             });
+            const res = await response.json();
+            if (res.url) document.getElementById(activeTarget).src = res.url;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function deletePhoto(targetId) {
+        if(confirm("Delete this memory?")) {
+            document.getElementById(targetId).src = "https://via.placeholder.com/300";
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", key: targetId }) });
         }
-        function onPlayerReady(event) { /* Ready */ }
+    }
 
-        // 2. Reveal Logic
-        function openSurprise() {
-            // Glitter Explosion
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#b56576', '#6d597a', '#ffffff'] });
-            
-            // Continuous glitter for a few seconds
-            var end = Date.now() + (3 * 1000);
-            (function frame() {
-                confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#b56576'] });
-                confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#6d597a'] });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
+    // 4. Name Handling
+    async function saveName(id) {
+        const val = document.getElementById(id).value;
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "save_text", key: id, value: val })
+        });
+    }
 
-            // Audio
-            if (player) { player.playVideo(); }
+    function updateCounter() {
+        const days = Math.floor((new Date() - new Date("2024-01-01")) / (1000 * 60 * 60 * 24));
+        document.getElementById("counter").innerText = days + " Days of Us";
+    }
 
-            // UI Transitions
-            document.getElementById('surprise-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('surprise-overlay').style.visibility = 'hidden';
-                document.getElementById('main-header').style.opacity = '1';
-                document.getElementById('main-content').style.display = 'block';
-            }, 1000);
-
-            updateCounter();
-        }
-
-        function updateCounter() {
-            const start = new Date("2023-08-12"); // Update to your real date
-            const days = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
-            document.getElementById("counter").innerText = days + " Days Together";
-        }
-
-        function revealQuiz() {
-            document.getElementById('quiz-ans').style.display = 'block';
-        }
-
-        // Load YouTube API
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    </script>
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+</script>
 </body>
 </html>

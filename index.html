@@ -1,147 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
-    <meta charset="UTF-8">   
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Anniversary | Forever & Always</title>
+    <title>Our Anniversary | The Surprise</title>
     <style>
-        :root { --primary: #e63946; --secondary: #f1faee; --accent: #a8dadc; --text: #1d3557; }
-        body { font-family: 'Georgia', serif; background: var(--secondary); color: var(--text); margin: 0; padding: 0; scroll-behavior: smooth; }
-        .container { max-width: 900px; margin: auto; padding: 20px; }
+        :root { --primary: #bc6c25; --secondary: #fefae0; --bloom: #dda15e; --text: #283618; }
+        body { font-family: 'Georgia', serif; background: var(--secondary); color: var(--text); margin: 0; overflow-x: hidden; }
         
-        /* Intro Section */
-        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('hero-photo.jpg') center/cover; }
-        .hero-img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        
-        /* Counter & Sections */
-        #counter { font-size: 1.5rem; font-weight: bold; margin: 20px 0; color: var(--primary); }
-        section { padding: 80px 20px; border-bottom: 1px solid var(--accent); }
-        h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 30px; }
+        /* Surprise Overlay */
+        #surprise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #606c38; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 1000;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+        .gift-box { font-size: 80px; cursor: pointer; transition: transform 0.3s; }
+        .gift-box:hover { transform: scale(1.1) rotate(5deg); }
 
-        /* Timeline Design */
-        .timeline { border-left: 3px solid var(--primary); margin: 0 auto; width: 80%; padding-left: 30px; text-align: left; }
-        .moment { position: relative; margin-bottom: 40px; }
-        .moment::before { content: ''; position: absolute; left: -39px; top: 5px; width: 15px; height: 15px; background: var(--primary); border-radius: 50%; }
+        /* Main Hero Section */
+        header { 
+            height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; position: relative; 
+            opacity: 0; transition: opacity 2s ease-in;
+        }
 
-        /* Photo Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .grid img { width: 100%; border-radius: 10px; transition: transform 0.3s; }
-        .grid img:hover { transform: scale(1.05); }
+        .photo-wrapper { position: relative; width: 250px; height: 250px; }
+        .main-photo { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            object-fit: cover; border: 8px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative; z-index: 2;
+        }
 
-        /* Quiz Styling */
-        .quiz-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        button { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 1rem; }
+        /* Flower Blooming Animation */
+        .flower {
+            position: absolute; width: 80px; height: 80px; z-index: 1;
+            opacity: 0; transform: scale(0); transition: all 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+        .reveal .flower { opacity: 1; transform: scale(1.2); }
+        .f1 { top: -40px; left: 50%; }
+        .f2 { bottom: -20px; right: -20px; }
+        .f3 { bottom: -20px; left: -20px; }
 
-        /* Audio Player */
-        .music-player { position: fixed; bottom: 20px; right: 20px; background: white; padding: 10px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        /* Rest of the Content */
+        .content { max-width: 800px; margin: auto; padding: 40px 20px; display: none; }
+        .timeline { border-left: 2px solid var(--primary); padding-left: 20px; text-align: left; margin: 20px 0; }
+        .counter { font-size: 1.5rem; color: var(--primary); font-weight: bold; margin: 20px 0; }
+
     </style>
 </head>
 <body>
 
-<div class="music-player">
-    <audio controls loop>
-        <source src="your-song.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-</div>
+    <div id="surprise-overlay" onclick="openSurprise()">
+        <div class="gift-box">🎁</div>
+        <h2 style="color: white;">Click to open your surprise</h2>
+    </div>
 
-<header>
-    <img src="main-photo.jpg" alt="Us" class="hero-img">
-    <h1>[Name 1] & [Name 2]</h1>
-    <p>Celebrating Our Anniversary Since [Date]</p>
-    <div id="counter">Loading our time together...</div>
-</header>
+    <header id="main-header">
+        <div class="photo-wrapper" id="photo-container">
+            <img src="main-photo.jpg" alt="Our Best Photo" class="main-photo">
+            
+            <svg class="flower f1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#e63946"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#f1faee" transform="rotate(0 50 50)"/></svg>
+            <svg class="flower f2" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#ffb703"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#fb8500" transform="rotate(45 50 50)"/></svg>
+            <svg class="flower f3" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#a8dadc"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#457b9d" transform="rotate(90 50 50)"/></svg>
+        </div>
+        
+        <h1>[Name] & [Name]</h1>
+        <div id="counter" class="counter"></div>
+    </header>
 
-<div class="container">
-    <section>
-        <h2>Our Story</h2>
-        <div class="timeline">
-            <div class="moment">
-                <h3>The First Hello</h3>
-                <p>Describe how you met here. Keep it like a short journey.</p>
+    <div class="content" id="main-content">
+        <section>
+            <h2>Our Story</h2>
+            <div class="timeline">
+                <p><strong>[Date]:</strong> The day everything changed...</p>
+                <p><strong>[Key Moment]:</strong> When we knew it was forever.</p>
             </div>
-            <div class="moment">
-                <h3>A Key Moment</h3>
-                <p>Add a significant milestone or turning point.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section>
-        <h2>Best Memories</h2>
-        <div class="grid">
-            <img src="memory1.jpg" alt="Description">
-            <img src="memory2.jpg" alt="Description">
-            <img src="memory3.jpg" alt="Description">
-        </div>
-    </section>
+        <section>
+            <h2>My Letter to You</h2>
+            <p style="font-style: italic; line-height: 1.8;">"Your heartfelt message goes here..."</p>
+        </section>
 
-    <section>
-        <h2>A Letter to You</h2>
-        <div style="font-style: italic; font-size: 1.2rem; line-height: 2;">
-            "Dear [Name], <br>
-            Write your heartfelt message here. This is the heart of the site. <br>
-            Love, [Your Name]"
-        </div>
-    </section>
+        <section>
+            <h2>Our Future</h2>
+            <p>Dreams of [Trip/Goal] and many more years like this.</p>
+        </section>
 
-    <section>
-        <h2>Inside Jokes & Small Things</h2>
-        <ul style="list-style: none; padding: 0;">
-            <li>✨ [Inside Joke #1]</li>
-            <li>✨ [Favorite Moment #2]</li>
-            <li>✨ [That one time when...]</li>
-        </ul>
-    </section>
+        <p style="text-align: center; margin-top: 50px;">Happy Anniversary. ❤️</p>
+    </div>
 
-    <section class="quiz-box">
-        <h2>Love Quiz</h2>
-        <p id="quiz-question">Where was our first date?</p>
-        <button onclick="checkAnswer()">Show Hint</button>
-        <p id="hint" style="display:none; margin-top: 15px;">It involved a lot of laughing and [Hint detail]!</p>
-    </section>
+    <script>
+        function openSurprise() {
+            // 1. Hide the box
+            const overlay = document.getElementById('surprise-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.visibility = 'hidden', 1000);
 
-    <section>
-        <h2>Our Future</h2>
-        <p>This is where we talk about our dreams, our upcoming trip to [Place], and growing old together.</p>
-    </section>
+            // 2. Reveal header and start "Bloom"
+            const header = document.getElementById('main-header');
+            header.style.opacity = '1';
+            
+            setTimeout(() => {
+                document.getElementById('photo-container').classList.add('reveal');
+            }, 500);
 
-    <section>
-        <h2>Messages from Friends</h2>
-        <blockquote style="border-left: 5px solid var(--accent); padding-left: 20px;">
-            "You two are the perfect match!" - [Friend's Name]
-        </blockquote>
-    </section>
+            // 3. Show the rest of the content
+            document.getElementById('main-content').style.display = 'block';
+            updateCounter();
+        }
 
-    <section style="border-bottom: none;">
-        <h2>Always Yours</h2>
-        <p>Final simple but meaningful message here.</p>
-    </section>
-</div>
-
-<script>
-    // Time Counter Function
-    function updateCounter() {
-        const startDate = new Date("2023-01-01T00:00:00"); // REPLACE WITH YOUR DATE
-        const now = new Date();
-        const diff = now - startDate;
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / 1000 / 60) % 60);
-
-        document.getElementById("counter").innerText = 
-            `${days} Days, ${hours} Hours, and ${mins} Minutes Together`;
-    }
-
-    setInterval(updateCounter, 1000);
-    updateCounter();
-
-    // Quiz Function
-    function checkAnswer() {
-        document.getElementById('hint').style.display = 'block';
-    }
-</script>
-
+        function updateCounter() {
+            const start = new Date("2024-01-01"); // CHANGE THIS TO YOUR DATE
+            const now = new Date();
+            const diff = now - start;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("counter").innerText = `We've been happy for ${days} days.`;
+        }
+    </script>
 </body>
 </html>

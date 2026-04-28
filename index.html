@@ -3,166 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Journey | Happy Anniversary</title>
+    <title>Our Infinite Story</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary-pink: #ff4d6d;
-            --soft-cream: #fff0f3;
-            --dark-text: #590d22;
+            --accent: #ff4d6d;
+            --glass: rgba(255, 255, 255, 0.8);
+            --text: #2b2d42;
         }
 
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background-color: var(--soft-cream);
-            color: var(--dark-text);
-            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: var(--text);
             overflow-x: hidden;
         }
 
-        /* Hero Section */
-        header {
+        /* Animated Background Elements */
+        .bg-blobs {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(120deg, #fff0f3 0%, #ffccd5 100%);
+        }
+
+        /* Parallax Hero */
+        .hero {
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(255, 77, 109, 0.1), rgba(255, 77, 109, 0.1)),
-                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070') center/cover;
-            color: white;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-        }
-
-        h1 { font-size: 3.5rem; margin-bottom: 0.5rem; }
-        p { font-size: 1.2rem; }
-
-        /* Countdown Timer */
-        .timer-container {
-            padding: 50px 20px;
-            background: white;
-        }
-
-        #countdown {
-            display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070') fixed center/cover;
+            color: white;
+            text-align: center;
         }
 
-        .time-box {
-            background: var(--primary-pink);
+        .hero-content h1 { font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; }
+        
+        /* Floating Music Toggle */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--accent);
             color: white;
             padding: 15px;
-            border-radius: 10px;
-            min-width: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .time-box span { font-size: 2rem; display: block; font-weight: bold; }
+        /* Glassmorphism Timeline */
+        .container { max-width: 900px; margin: 0 auto; padding: 50px 20px; }
 
-        /* Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            padding: 50px;
+        .timeline {
+            position: relative;
+            padding: 20px 0;
         }
 
-        .gallery img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+            transform: translateX(-50%);
+        }
+
+        .milestone {
+            margin-bottom: 50px;
+            width: 45%;
+            padding: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
-            transition: transform 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            transition: 0.3s;
         }
 
-        .gallery img:hover { transform: scale(1.05); }
+        .milestone:nth-child(even) { margin-left: auto; }
+        .milestone:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-        /* Message Section */
-        .message-section {
-            padding: 80px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.8;
-            font-style: italic;
+        /* Counter Grid */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        footer {
-            padding: 30px;
-            background: var(--primary-pink);
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-card span { font-size: 1.8rem; font-weight: bold; color: var(--accent); display: block; }
+
+        /* Interactive Gallery */
+        .gallery-wrap {
+            columns: 3 250px;
+            gap: 15px;
+        }
+
+        .gallery-wrap img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: zoom-in;
+            filter: grayscale(20%);
+            transition: 0.5s;
+        }
+
+        .gallery-wrap img:hover { filter: grayscale(0); transform: scale(1.02); }
+
+        .celebrate-btn {
+            background: var(--accent);
             color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: 0.3s;
         }
 
-        .heart { color: #c9184a; animation: pulse 1.5s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        @media (max-width: 768px) {
+            .timeline::before { left: 20px; }
+            .milestone { width: 85%; margin-left: 45px !important; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Happy Anniversary!</h1>
-        <p>Celebrating the best day of our lives</p>
-        <i class="fa-solid fa-heart heart" style="font-size: 3rem; margin-top: 20px;"></i>
-    </header>
+    <div class="bg-blobs"></div>
 
-    <section class="timer-container">
-        <h2>Time Since We Met</h2>
-        <div id="countdown">
-            <div class="time-box"><span id="days">0</span>Days</div>
-            <div class="time-box"><span id="hours">0</span>Hrs</div>
-            <div class="time-box"><span id="minutes">0</span>Min</div>
-            <div class="time-box"><span id="seconds">0</span>Sec</div>
+    <div class="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fa-solid fa-music"></i>
+    </div>
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Our Story</h1>
+            <p>Every second spent with you is a gift.</p>
+            <button class="celebrate-btn" onclick="fireworks()">Click for a Surprise</button>
         </div>
     </section>
 
-    <section class="gallery">
-        <img src="https://images.unsplash.com/photo-1516589174184-c6858b16d483?w=500" alt="Memory 1">
-        <img src="https://images.unsplash.com/photo-1522673607200-164883524354?w=500" alt="Memory 2">
-        <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=500" alt="Memory 3">
-        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500" alt="Memory 4">
-    </section>
+    <div class="container">
+        <section style="text-align: center; margin-bottom: 100px;">
+            <h2>The Time We've Shared</h2>
+            <div class="counter-grid">
+                <div class="stat-card"><span id="years">0</span>Years</div>
+                <div class="stat-card"><span id="days">0</span>Days</div>
+                <div class="stat-card"><span id="hours">0</span>Hours</div>
+                <div class="stat-card"><span id="minutes">0</span>Mins</div>
+            </div>
+        </section>
 
-    <section class="message-section">
-        <i class="fa-solid fa-quote-left" style="font-size: 2rem; color: var(--primary-pink);"></i>
-        <h2>My Letter to You</h2>
-        <p>
-            Every day with you is a new adventure. From our first coffee to our latest trip, 
-            I wouldn't trade a single moment. You make everything brighter just by being you. 
-            Here is to many more years of laughter, growth, and love.
-        </p>
-    </section>
+        <section class="timeline">
+            <div class="milestone">
+                <h3>The First Day</h3>
+                <p>That day changed everything. The moment I saw you, I knew you were special.</p>
+            </div>
+            <div class="milestone">
+                <h3>The Big Move</h3>
+                <p>Navigating new cities and new jobs together made us stronger than ever.</p>
+            </div>
+            <div class="milestone">
+                <h3>Our Future</h3>
+                <p>The best is yet to come. I can't wait to build the rest of our lives together.</p>
+            </div>
+        </section>
 
-    <footer>
-        <p>Created with <i class="fa-solid fa-heart"></i> for you</p>
+        <section>
+            <h2 style="text-align: center;">Captured Moments</h2>
+            <div class="gallery-wrap">
+                <img src="https://images.unsplash.com/photo-1516589174184-c6858b16d483?w=500" alt="">
+                <img src="https://images.unsplash.com/photo-1522673607200-164883524354?w=500" alt="">
+                <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=500" alt="">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500" alt="">
+                <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=500" alt="">
+                <img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=500" alt="">
+            </div>
+        </section>
+    </div>
+
+    <footer style="text-align: center; padding: 50px; background: white;">
+        <p>Forever & Always <i class="fa-solid fa-heart" style="color: var(--accent);"></i></p>
     </footer>
 
     <script>
-        // SET YOUR ANNIVERSARY DATE HERE (YYYY, MM-1, DD)
-        // Note: Months are 0-indexed (January is 0, April is 3)
-        const anniversaryDate = new Date(2023, 3, 28, 0, 0, 0); 
+        // DATE CONFIGURATION
+        const startDate = new Date(2023, 3, 28); // April 28, 2023
 
-        function updateTimer() {
+        function updateClock() {
             const now = new Date();
-            const diff = now - anniversaryDate;
+            const diff = now - startDate;
 
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            const yrs = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-            document.getElementById("days").innerText = d;
-            document.getElementById("hours").innerText = h;
-            document.getElementById("minutes").innerText = m;
-            document.getElementById("seconds").innerText = s;
+            document.getElementById('years').innerText = yrs;
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hrs;
+            document.getElementById('minutes').innerText = mins;
         }
 
-        setInterval(updateTimer, 1000);
-        updateTimer();
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function fireworks() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4d6d', '#ffccd5', '#ffffff']
+            });
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            if (music.paused) {
+                music.play();
+                icon.classList.replace('fa-music', 'fa-pause');
+            } else {
+                music.pause();
+                icon.classList.replace('fa-pause', 'fa-music');
+            }
+        }
     </script>
 </body>
 </html>

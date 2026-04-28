@@ -3,52 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Anniversary | Forever</title>
+    <title>Our Forever | Anniversary</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary: #bc6c25; --secondary: #fefae0; --accent: #dda15e; --text: #283618; }
-        body { font-family: 'Georgia', serif; background: var(--secondary); color: var(--text); margin: 0; overflow-x: hidden; }
+        :root { 
+            --primary: #6d597a; 
+            --accent: #b56576; 
+            --text: #355070;
+            /* Subtle geometric pattern background */
+            --pattern: url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f8edeb; 
+            background-image: var(--pattern);
+            color: var(--text); 
+            margin: 0; 
+            overflow-x: hidden; 
+            line-height: 1.8;
+        }
         
         /* Surprise Overlay */
         #surprise-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #606c38; display: flex; flex-direction: column;
+            background: var(--primary); display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 1000;
-            transition: opacity 1.5s ease-out, visibility 1.5s;
+            transition: opacity 1.2s ease-in-out, visibility 1.2s;
         }
-        .gift-box { font-size: 100px; cursor: pointer; transition: transform 0.3s; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
-        .gift-box:hover { transform: scale(1.1) rotate(-5deg); }
+        .gift-box { font-size: 100px; cursor: pointer; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
 
-        /* Main Hero Section */
+        /* Glassmorphism Sections */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 700px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
         header { 
             height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; position: relative; 
-            opacity: 0; transition: opacity 2s ease-in;
+            justify-content: center; align-items: center; opacity: 0; 
+            transition: opacity 2s ease-in;
         }
 
-        .photo-wrapper { position: relative; width: 280px; height: 280px; margin-bottom: 20px; }
         .main-photo { 
-            width: 100%; height: 100%; border-radius: 50%; 
-            object-fit: cover; border: 8px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            position: relative; z-index: 2;
+            width: 250px; height: 250px; border-radius: 50%; 
+            object-fit: cover; border: 10px solid white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
-        /* Flower Blooming */
-        .flower {
-            position: absolute; width: 100px; height: 100px; z-index: 1;
-            opacity: 0; transform: scale(0); transition: all 2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        .counter { font-size: 1.8rem; color: var(--accent); font-weight: bold; margin: 20px 0; }
+        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+        .timeline { position: relative; padding-left: 30px; border-left: 2px solid var(--accent); text-align: left; }
+        .timeline-point { margin-bottom: 30px; position: relative; }
+        .timeline-point::before {
+            content: ''; position: absolute; left: -39px; top: 10px;
+            width: 16px; height: 16px; background: var(--accent); border-radius: 50%;
         }
-        .reveal .flower { opacity: 1; transform: scale(1.3); }
-        .f1 { top: -50px; left: 40%; }
-        .f2 { bottom: -30px; right: -30px; }
-        .f3 { bottom: -30px; left: -30px; }
 
-        /* Hidden YouTube Player */
-        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        .quiz-section { background: var(--primary); color: white; border-radius: 15px; padding: 20px; margin-top: 20px; }
+        button { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #e56b6f; transform: translateY(-2px); }
 
-        .content { max-width: 800px; margin: auto; padding: 40px 20px; display: none; text-align: center; }
-        .counter { font-size: 1.8rem; color: var(--primary); font-weight: bold; margin: 20px 0; }
-        .timeline { border-left: 2px solid var(--primary); padding-left: 20px; text-align: left; margin: 40px auto; max-width: 500px; }
+        .footer { padding: 60px 20px; text-align: center; font-style: italic; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -57,97 +81,128 @@
 
     <div id="surprise-overlay" onclick="openSurprise()">
         <div class="gift-box">🎁</div>
-        <h2 style="color: white; font-family: sans-serif; letter-spacing: 2px;">CLICK TO UNWRAP</h2>
+        <h2 style="color: white; margin-top: 20px; font-weight: 300; letter-spacing: 3px;">A SURPRISE FOR YOU</h2>
     </div>
 
     <header id="main-header">
-        <div class="photo-wrapper" id="photo-container">
-            <img src="main-photo.jpg" alt="Our Moment" class="main-photo">
-            
-            <svg class="flower f1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#e63946"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#ffb703" transform="rotate(0 50 50)"/></svg>
-            <svg class="flower f2" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#fb8500"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#d4a373" transform="rotate(45 50 50)"/></svg>
-            <svg class="flower f3" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#dda15e"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#606c38" transform="rotate(90 50 50)"/></svg>
-        </div>
-        
-        <h1 style="font-size: 2.5rem; margin: 10px 0;">[Name] & [Name]</h1>
+        <img src="main-photo.jpg" alt="Our Favorite Photo" class="main-photo">
+        <h1 style="font-size: 3rem; margin: 0;">Alex & Sam</h1>
+        <p style="letter-spacing: 4px; text-transform: uppercase; font-size: 0.9rem;">Forever Starts Today</p>
         <div id="counter" class="counter"></div>
     </header>
 
-    <div class="content" id="main-content">
-        <section>
-            <h2>Our Journey</h2>
+    <div id="main-content" style="display:none; padding: 20px;">
+        
+        <section class="glass-card">
+            <h2 style="color: var(--accent);">Our Journey So Far</h2>
             <div class="timeline">
-                <p><strong>The Start:</strong> How it all began...</p>
-                <p><strong>A Milestone:</strong> That special day we share.</p>
+                <div class="timeline-point">
+                    <strong>The Coffee Shop (Aug 12, 2023)</strong>
+                    <p>It started with a spilled latte and a laugh that I'll never forget. You were wearing that blue jacket, and I knew right then that my Tuesdays would never be the same.</p>
+                </div>
+                <div class="timeline-point">
+                    <strong>The First Adventure</strong>
+                    <p>Remember our road trip to the coast? 6 hours of singing badly to 90s hits and getting lost in that small town. It wasn't about the destination; it was about the person in the passenger seat.</p>
+                </div>
+                <div class="timeline-point">
+                    <strong>Saying 'I Love You'</strong>
+                    <p>Under the city lights, after the rain had stopped. It was the easiest thing I've ever said.</p>
+                </div>
             </div>
         </section>
 
-        <section>
-            <h2>For You, My Love</h2>
-            <p style="font-style: italic; font-size: 1.2rem; line-height: 2;">
-                "Your heart-to-heart message goes here. <br> Every day with you is a gift."
+        <section class="glass-card">
+            <h2 style="color: var(--accent);">Moments Captured</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 1">
+                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 2">
+                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 3">
+                <img src="https://via.placeholder.com/300" style="width: 100%; border-radius: 10px;" alt="Memory 4">
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 style="color: var(--accent);">A Letter To My Best Friend</h2>
+            <p>
+                They say that home is a place, but since meeting you, I've realized that home is actually a person. Thank you for being the calm in my storm, the smile at the end of my long days, and the person I can always count on for an inside joke that no one else understands.
+            </p>
+            <p>
+                I love the way you drink your tea, the way you get excited about the small things, and the way you make me feel like the luckiest person in the world. Here is to many more years of us.
             </p>
         </section>
 
-        <p style="opacity: 0.7; font-size: 0.9rem;">(Music Playing: Your Favorite Song)</p>
+        <section class="glass-card">
+            <h2 style="color: var(--accent);">Small Interaction</h2>
+            <div class="quiz-section">
+                <p id="quiz-txt">Question: What is our "official" favorite movie to watch when it rains?</p>
+                <button onclick="revealQuiz()">Show the Answer</button>
+                <p id="quiz-ans" style="display:none; margin-top:15px; font-weight: bold;">It's 'About Time'! Because we always cry at the same scene.</p>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 style="color: var(--accent);">Our Future Dreams</h2>
+            <ul style="text-align: left; display: inline-block;">
+                <li>✈️ Visiting the lavender fields in France.</li>
+                <li>🏡 Building that cozy library we always talk about.</li>
+                <li>🐕 Getting a Golden Retriever named 'Noodle'.</li>
+                <li>👵 Growing old and still holding hands in the park.</li>
+            </ul>
+        </section>
+
+        <div class="footer">
+            <p>Every second spent with you is a second well lived.</p>
+            <h3>I Love You More.</h3>
+        </div>
     </div>
 
     <script>
-        // 1. YouTube Player Integration
+        // 1. YouTube Player
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
-                videoId: 'dQw4w9WgXcQ', // REPLACE with your YouTube Video ID (the part after v=)
+                height: '0', width: '0',
+                videoId: 'LjhCEhWiKXk', // Example romantic song ID. Change to yours!
                 events: { 'onReady': onPlayerReady }
             });
         }
+        function onPlayerReady(event) { /* Ready */ }
 
-        function onPlayerReady(event) {
-            // Player is ready but won't play until user interacts
-        }
-
-        // 2. The Surprise Reveal Function
+        // 2. Reveal Logic
         function openSurprise() {
-            // Trigger Glitter/Confetti
-            var duration = 5 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1100 };
+            // Glitter Explosion
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#b56576', '#6d597a', '#ffffff'] });
+            
+            // Continuous glitter for a few seconds
+            var end = Date.now() + (3 * 1000);
+            (function frame() {
+                confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#b56576'] });
+                confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#6d597a'] });
+                if (Date.now() < end) { requestAnimationFrame(frame); }
+            }());
 
-            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-
-            // Play Music
+            // Audio
             if (player) { player.playVideo(); }
 
-            // Fade out the box
+            // UI Transitions
             document.getElementById('surprise-overlay').style.opacity = '0';
-            setTimeout(() => document.getElementById('surprise-overlay').style.visibility = 'hidden', 1500);
-
-            // Show content and bloom
-            document.getElementById('main-header').style.opacity = '1';
             setTimeout(() => {
-                document.getElementById('photo-container').classList.add('reveal');
+                document.getElementById('surprise-overlay').style.visibility = 'hidden';
+                document.getElementById('main-header').style.opacity = '1';
                 document.getElementById('main-content').style.display = 'block';
             }, 1000);
 
             updateCounter();
         }
 
-        // 3. Time Counter
         function updateCounter() {
-            const start = new Date("2024-01-01"); // UPDATE YOUR ANNIVERSARY DATE
-            const now = new Date();
-            const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-            document.getElementById("counter").innerText = `We've shared ${days} days of love.`;
+            const start = new Date("2023-08-12"); // Update to your real date
+            const days = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
+            document.getElementById("counter").innerText = days + " Days Together";
+        }
+
+        function revealQuiz() {
+            document.getElementById('quiz-ans').style.display = 'block';
         }
 
         // Load YouTube API

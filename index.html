@@ -1,124 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    :root { --primary: #4285f4; --bg: #f8f9fa; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; transition: 0.5s; }
-    
-    /* DASHBOARD STYLES */
-    .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-    h2 { margin-top: 0; color: #333; text-align: center; }
-    label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: 600; color: #666; }
-    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-    textarea { height: 80px; resize: none; }
-    .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 16px; font-weight: bold; }
-    .btn:hover { opacity: 0.9; }
-    .btn-view { background: #34a853; margin-top: 10px; }
-    hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Invitation Builder</title>
+    <style>
+        :root { --primary: #4285f4; --success: #34a853; --bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; transition: 0.5s; }
+        
+        /* DASHBOARD */
+        .container { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 450px; box-sizing: border-box; }
+        h1 { margin-top: 0; color: #1a73e8; text-align: center; font-size: 24px; }
+        label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: 700; color: #5f6368; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 8px; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--primary); }
+        textarea { height: 100px; }
+        
+        .btn-group { margin-top: 25px; }
+        .btn { border: none; width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.2s; }
+        .btn-save { background: var(--primary); color: white; margin-bottom: 10px; }
+        .btn-view { background: var(--success); color: white; }
+        .btn:hover { filter: brightness(0.9); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        
+        hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
 
-    /* GENERATED PAGE STYLES */
-    #page-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-    .back-btn { position: absolute; top: 20px; left: 20px; padding: 8px 15px; border-radius: 20px; border: 1px solid #333; background: white; cursor: pointer; }
-    #view-img { max-width: 100%; max-height: 300px; border-radius: 10px; margin-bottom: 20px; display: none; }
-    #view-msg { font-size: 1.2rem; line-height: 1.6; max-width: 600px; text-align: center; }
+        /* GENERATED PAGE VIEW */
+        #page-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 40px; box-sizing: border-box; }
+        .back-btn { position: absolute; top: 30px; left: 30px; padding: 10px 20px; border-radius: 30px; border: 1px solid #333; background: white; cursor: pointer; font-weight: bold; }
+        #view-img { max-width: 100%; max-height: 350px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #view-title { font-size: 3rem; margin: 0; text-align: center; }
+        #view-msg { font-size: 1.4rem; text-align: center; max-width: 700px; line-height: 1.5; }
 
-    .hidden { display: none !important; }
-  </style>
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-  <div id="dashboard" class="container">
-    <h2>Invitation Creator</h2>
-    
-    <label>Set Username (Unique ID)</label>
-    <input type="text" id="username" placeholder="e.g. party-01">
+    <div id="dashboard" class="container">
+        <h1>Invite Engine</h1>
+        
+        <label>Your Unique ID (Username)</label>
+        <input type="text" id="username" placeholder="e.g. birthday-jack">
 
-    <label>Invitation Title / Name</label>
-    <input type="text" class="config" data-key="title" placeholder="Welcome to my party">
+        <label>Event Title</label>
+        <input type="text" class="config" data-key="title" placeholder="A Special Celebration">
 
-    <label>Message Content</label>
-    <textarea class="config" data-key="message" placeholder="Type your invite here..."></textarea>
+        <label>Message Content</label>
+        <textarea class="config" data-key="message" placeholder="Describe your event..."></textarea>
 
-    <label>Background Color</label>
-    <input type="color" class="config" data-key="bgColor" value="#ffffff">
+        <label>Background Color</label>
+        <input type="color" class="config" data-key="bgColor" value="#ffffff">
 
-    <label>Font Style</label>
-    <select class="config" data-key="font">
-      <option value="'Segoe UI', sans-serif">Modern Clean</option>
-      <option value="'Georgia', serif">Elegant Serif</option>
-      <option value="'Courier New', monospace">Classic Typewriter</option>
-      <option value="'Comic Sans MS', cursive">Playful</option>
-    </select>
+        <label>Theme Font</label>
+        <select class="config" data-key="font">
+            <option value="'Segoe UI', sans-serif">Modern Sans</option>
+            <option value="'Georgia', serif">Classic Elegant</option>
+            <option value="'Courier New', monospace">Vintage Typewriter</option>
+            <option value="cursive">Fancy Script</option>
+        </select>
 
-    <label>Image URL (Optional)</label>
-    <input type="text" class="config" data-key="imgUrl" placeholder="https://image-link.com/img.jpg">
+        <label>Hero Image URL</label>
+        <input type="text" class="config" data-key="imgUrl" placeholder="https://example.com/photo.jpg">
 
-    <button class="btn" onclick="saveData()">Save & Create Site</button>
-    
-    <hr>
-    
-    <input type="text" id="searchUser" placeholder="Enter username to visit">
-    <button class="btn btn-view" onclick="loadSite()">View Invitation</button>
-  </div>
+        <div class="btn-group">
+            <button class="btn btn-save" id="saveBtn" onclick="saveData()">Save Invitation</button>
+            <hr>
+            <label>View a Saved Site</label>
+            <input type="text" id="searchUser" placeholder="Enter Username">
+            <button class="btn btn-view" onclick="loadSite()">Open Invitation</button>
+        </div>
+    </div>
 
-  <div id="page-view">
-    <button class="back-btn" onclick="closeView()">← Edit/Create New</button>
-    <img id="view-img" src="" alt="Invitation Image">
-    <h1 id="view-title"></h1>
-    <p id="view-msg"></p>
-  </div>
+    <div id="page-view">
+        <button class="back-btn" onclick="closeView()">← Back to Dashboard</button>
+        <img id="view-img" src="" style="display:none;">
+        <h1 id="view-title"></h1>
+        <p id="view-msg"></p>
+    </div>
 
-  <script>
-    // 1. SAVE: Collects all inputs and sends to Google Apps Script
-    function saveData() {
-      const user = document.getElementById('username').value;
-      if (!user) return alert("Please enter a username!");
+    <script>
+        // 1. PASTE YOUR APPS SCRIPT WEB APP URL HERE
+        const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
 
-      const config = {};
-      // Loop through everything with class "config" and store it
-      document.querySelectorAll('.config').forEach(field => {
-        config[field.getAttribute('data-key')] = field.value;
-      });
+        async function saveData() {
+            const user = document.getElementById('username').value;
+            const saveBtn = document.getElementById('saveBtn');
+            if (!user) return alert("Please set a username!");
 
-      google.script.run.withSuccessHandler(msg => {
-        alert(msg);
-      }).saveWebsite(user, config);
-    }
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Saving...";
 
-    // 2. LOAD: Fetches the JSON config and builds the page dynamically
-    function loadSite() {
-      const user = document.getElementById('searchUser').value;
-      if (!user) return alert("Type a username to search");
+            const config = {};
+            document.querySelectorAll('.config').forEach(field => {
+                config[field.getAttribute('data-key')] = field.value;
+            });
 
-      google.script.run.withSuccessHandler(config => {
-        if (!config) return alert("User not found in database!");
-
-        // Hide Dashboard, Show Page
-        document.getElementById('dashboard').classList.add('hidden');
-        const view = document.getElementById('page-view');
-        view.style.display = 'flex';
-
-        // APPLY THE SETTINGS
-        document.body.style.backgroundColor = config.bgColor;
-        view.style.fontFamily = config.font;
-        document.getElementById('view-title').innerText = config.title;
-        document.getElementById('view-msg').innerText = config.message;
-
-        // Handle Image
-        const img = document.getElementById('view-img');
-        if (config.imgUrl) {
-          img.src = config.imgUrl;
-          img.style.display = 'block';
-        } else {
-          img.style.display = 'none';
+            try {
+                // Using 'no-cors' mode is often necessary for Apps Script, 
+                // though it won't allow you to read the success message from Google.
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors", 
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ username: user, config: config })
+                });
+                alert("Saved! Wait a few seconds for the database to sync.");
+            } catch (e) {
+                console.error(e);
+                alert("Error saving data.");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "Save Invitation";
+            }
         }
 
-      }).getWebsiteData(user);
-    }
+        async function loadSite() {
+            const user = document.getElementById('searchUser').value;
+            if (!user) return alert("Enter a username to find.");
 
-    function closeView() {
-      location.reload(); // Simplest way to reset the dashboard
-    }
-  </script>
+            // We use a GET request to fetch the JSON from Google
+            try {
+                const response = await fetch(`${SCRIPT_URL}?username=${user}`);
+                const config = await response.json();
+
+                if (!config) return alert("Site not found!");
+
+                // Switch UI
+                document.getElementById('dashboard').classList.add('hidden');
+                const view = document.getElementById('page-view');
+                view.style.display = 'flex';
+
+                // Apply dynamic settings
+                document.body.style.backgroundColor = config.bgColor;
+                view.style.fontFamily = config.font;
+                document.getElementById('view-title').innerText = config.title;
+                document.getElementById('view-msg').innerText = config.message;
+
+                const img = document.getElementById('view-img');
+                if (config.imgUrl) {
+                    img.src = config.imgUrl;
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+            } catch (e) {
+                alert("Error loading site. Check your Script URL.");
+                console.error(e);
+            }
+        }
+
+        function closeView() {
+            location.reload();
+        }
+    </script>
 </body>
 </html>

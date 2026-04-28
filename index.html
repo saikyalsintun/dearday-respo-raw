@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Anniversary | The Surprise</title>
+    <title>Our Anniversary | Forever</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary: #bc6c25; --secondary: #fefae0; --bloom: #dda15e; --text: #283618; }
+        :root { --primary: #bc6c25; --secondary: #fefae0; --accent: #dda15e; --text: #283618; }
         body { font-family: 'Georgia', serif; background: var(--secondary); color: var(--text); margin: 0; overflow-x: hidden; }
         
         /* Surprise Overlay */
@@ -13,10 +14,10 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #606c38; display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 1000;
-            transition: opacity 1s ease-out, visibility 1s;
+            transition: opacity 1.5s ease-out, visibility 1.5s;
         }
-        .gift-box { font-size: 80px; cursor: pointer; transition: transform 0.3s; }
-        .gift-box:hover { transform: scale(1.1) rotate(5deg); }
+        .gift-box { font-size: 100px; cursor: pointer; transition: transform 0.3s; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
+        .gift-box:hover { transform: scale(1.1) rotate(-5deg); }
 
         /* Main Hero Section */
         header { 
@@ -25,99 +26,135 @@
             opacity: 0; transition: opacity 2s ease-in;
         }
 
-        .photo-wrapper { position: relative; width: 250px; height: 250px; }
+        .photo-wrapper { position: relative; width: 280px; height: 280px; margin-bottom: 20px; }
         .main-photo { 
             width: 100%; height: 100%; border-radius: 50%; 
-            object-fit: cover; border: 8px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            object-fit: cover; border: 8px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             position: relative; z-index: 2;
         }
 
-        /* Flower Blooming Animation */
+        /* Flower Blooming */
         .flower {
-            position: absolute; width: 80px; height: 80px; z-index: 1;
-            opacity: 0; transform: scale(0); transition: all 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            position: absolute; width: 100px; height: 100px; z-index: 1;
+            opacity: 0; transform: scale(0); transition: all 2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
-        .reveal .flower { opacity: 1; transform: scale(1.2); }
-        .f1 { top: -40px; left: 50%; }
-        .f2 { bottom: -20px; right: -20px; }
-        .f3 { bottom: -20px; left: -20px; }
+        .reveal .flower { opacity: 1; transform: scale(1.3); }
+        .f1 { top: -50px; left: 40%; }
+        .f2 { bottom: -30px; right: -30px; }
+        .f3 { bottom: -30px; left: -30px; }
 
-        /* Rest of the Content */
-        .content { max-width: 800px; margin: auto; padding: 40px 20px; display: none; }
-        .timeline { border-left: 2px solid var(--primary); padding-left: 20px; text-align: left; margin: 20px 0; }
-        .counter { font-size: 1.5rem; color: var(--primary); font-weight: bold; margin: 20px 0; }
+        /* Hidden YouTube Player */
+        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
+        .content { max-width: 800px; margin: auto; padding: 40px 20px; display: none; text-align: center; }
+        .counter { font-size: 1.8rem; color: var(--primary); font-weight: bold; margin: 20px 0; }
+        .timeline { border-left: 2px solid var(--primary); padding-left: 20px; text-align: left; margin: 40px auto; max-width: 500px; }
     </style>
 </head>
 <body>
 
+    <div id="youtube-player"></div>
+
     <div id="surprise-overlay" onclick="openSurprise()">
         <div class="gift-box">🎁</div>
-        <h2 style="color: white;">Click to open your surprise</h2>
+        <h2 style="color: white; font-family: sans-serif; letter-spacing: 2px;">CLICK TO UNWRAP</h2>
     </div>
 
     <header id="main-header">
         <div class="photo-wrapper" id="photo-container">
-            <img src="main-photo.jpg" alt="Our Best Photo" class="main-photo">
+            <img src="main-photo.jpg" alt="Our Moment" class="main-photo">
             
-            <svg class="flower f1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#e63946"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#f1faee" transform="rotate(0 50 50)"/></svg>
-            <svg class="flower f2" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#ffb703"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#fb8500" transform="rotate(45 50 50)"/></svg>
-            <svg class="flower f3" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#a8dadc"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#457b9d" transform="rotate(90 50 50)"/></svg>
+            <svg class="flower f1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#e63946"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#ffb703" transform="rotate(0 50 50)"/></svg>
+            <svg class="flower f2" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#fb8500"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#d4a373" transform="rotate(45 50 50)"/></svg>
+            <svg class="flower f3" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#dda15e"/><path d="M50 0 Q60 25 50 50 Q40 25 50 0Z" fill="#606c38" transform="rotate(90 50 50)"/></svg>
         </div>
         
-        <h1>[Name] & [Name]</h1>
+        <h1 style="font-size: 2.5rem; margin: 10px 0;">[Name] & [Name]</h1>
         <div id="counter" class="counter"></div>
     </header>
 
     <div class="content" id="main-content">
         <section>
-            <h2>Our Story</h2>
+            <h2>Our Journey</h2>
             <div class="timeline">
-                <p><strong>[Date]:</strong> The day everything changed...</p>
-                <p><strong>[Key Moment]:</strong> When we knew it was forever.</p>
+                <p><strong>The Start:</strong> How it all began...</p>
+                <p><strong>A Milestone:</strong> That special day we share.</p>
             </div>
         </section>
 
         <section>
-            <h2>My Letter to You</h2>
-            <p style="font-style: italic; line-height: 1.8;">"Your heartfelt message goes here..."</p>
+            <h2>For You, My Love</h2>
+            <p style="font-style: italic; font-size: 1.2rem; line-height: 2;">
+                "Your heart-to-heart message goes here. <br> Every day with you is a gift."
+            </p>
         </section>
 
-        <section>
-            <h2>Our Future</h2>
-            <p>Dreams of [Trip/Goal] and many more years like this.</p>
-        </section>
-
-        <p style="text-align: center; margin-top: 50px;">Happy Anniversary. ❤️</p>
+        <p style="opacity: 0.7; font-size: 0.9rem;">(Music Playing: Your Favorite Song)</p>
     </div>
 
     <script>
-        function openSurprise() {
-            // 1. Hide the box
-            const overlay = document.getElementById('surprise-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.style.visibility = 'hidden', 1000);
+        // 1. YouTube Player Integration
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'dQw4w9WgXcQ', // REPLACE with your YouTube Video ID (the part after v=)
+                events: { 'onReady': onPlayerReady }
+            });
+        }
 
-            // 2. Reveal header and start "Bloom"
-            const header = document.getElementById('main-header');
-            header.style.opacity = '1';
-            
+        function onPlayerReady(event) {
+            // Player is ready but won't play until user interacts
+        }
+
+        // 2. The Surprise Reveal Function
+        function openSurprise() {
+            // Trigger Glitter/Confetti
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1100 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+
+            // Play Music
+            if (player) { player.playVideo(); }
+
+            // Fade out the box
+            document.getElementById('surprise-overlay').style.opacity = '0';
+            setTimeout(() => document.getElementById('surprise-overlay').style.visibility = 'hidden', 1500);
+
+            // Show content and bloom
+            document.getElementById('main-header').style.opacity = '1';
             setTimeout(() => {
                 document.getElementById('photo-container').classList.add('reveal');
-            }, 500);
+                document.getElementById('main-content').style.display = 'block';
+            }, 1000);
 
-            // 3. Show the rest of the content
-            document.getElementById('main-content').style.display = 'block';
             updateCounter();
         }
 
+        // 3. Time Counter
         function updateCounter() {
-            const start = new Date("2024-01-01"); // CHANGE THIS TO YOUR DATE
+            const start = new Date("2024-01-01"); // UPDATE YOUR ANNIVERSARY DATE
             const now = new Date();
-            const diff = now - start;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("counter").innerText = `We've been happy for ${days} days.`;
+            const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+            document.getElementById("counter").innerText = `We've shared ${days} days of love.`;
         }
+
+        // Load YouTube API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </body>
 </html>

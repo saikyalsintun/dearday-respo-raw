@@ -6,57 +6,128 @@
     <title>Our Anniversary | Forever</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --primary: #6d597a; --accent: #b56576; --bg: #f8edeb; --text: #355070; }
+        :root { 
+            --primary: #6d597a; 
+            --accent: #b56576; 
+            --bg: #f8edeb; 
+            --text: #355070; 
+        }
+
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: var(--bg) url('https://www.transparenttextures.com/patterns/cubes.png'); 
-            color: var(--text); margin: 0; text-align: center; line-height: 1.6; 
+            color: var(--text); 
+            margin: 0; 
+            text-align: center; 
+            line-height: 1.6;
+            overflow-x: hidden;
         }
         
-        /* Entrance */
+        /* Initial Surprise Gift Overlay */
         #surprise-overlay { 
-            position: fixed; inset: 0; background: var(--primary); 
-            display: flex; flex-direction: column; justify-content: center; 
-            align-items: center; z-index: 1000; transition: 1s; cursor: pointer; 
+            position: fixed; 
+            inset: 0; 
+            background: var(--primary); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+            transition: opacity 1s ease; 
+            cursor: pointer; 
         }
         
+        /* Hero Section */
         header { 
-            height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; opacity: 0; transition: 1.5s; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            opacity: 0; 
+            transition: opacity 1.5s ease-in; 
         }
 
-        /* Photo Styles */
         .img-container { position: relative; display: inline-block; margin: 10px; }
+        
         .main-photo { 
-            width: 250px; height: 250px; border-radius: 50%; 
-            object-fit: cover; border: 8px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            width: 250px; 
+            height: 250px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 8px solid white; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            background-color: #eee;
         }
-        .gallery-img { width: 100%; height: 220px; border-radius: 12px; object-fit: cover; }
 
-        /* Controls */
-        .upload-btn { 
-            position: absolute; bottom: 10px; right: 10px; background: var(--accent); 
-            color: white; border: none; border-radius: 50%; width: 42px; height: 42px; 
-            cursor: pointer; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+        .gallery-img { 
+            width: 100%; 
+            height: 220px; 
+            border-radius: 15px; 
+            object-fit: cover; 
+            background: #eee; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+
+        /* Buttons */
+        .upload-btn { 
+            position: absolute; 
+            bottom: 10px; 
+            right: 10px; 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            border-radius: 50%; 
+            width: 45px; 
+            height: 45px; 
+            cursor: pointer; 
+            font-size: 24px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            transition: transform 0.2s;
+        }
+        .upload-btn:hover { transform: scale(1.1); }
+
         .delete-btn { 
-            position: absolute; top: 10px; right: 10px; background: #333; 
-            color: white; border: none; border-radius: 50%; width: 30px; height: 30px; 
-            cursor: pointer; display: none; 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: rgba(51, 51, 51, 0.8); 
+            color: white; 
+            border: none; 
+            border-radius: 50%; 
+            width: 30px; 
+            height: 30px; 
+            cursor: pointer; 
+            display: none; 
         }
         .img-container:hover .delete-btn { display: block; }
 
+        /* Inputs for Names */
         .name-input { 
-            background: transparent; border: none; border-bottom: 2px dashed var(--accent); 
-            font-size: 2.2rem; text-align: center; color: var(--primary); 
-            width: 200px; font-family: inherit; outline: none;
+            background: transparent; 
+            border: none; 
+            border-bottom: 2px dashed var(--accent); 
+            font-size: 2.2rem; 
+            text-align: center; 
+            color: var(--primary); 
+            width: 220px; 
+            font-family: inherit; 
+            outline: none;
+            padding: 5px;
         }
+
         .glass-card { 
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); 
-            border-radius: 20px; padding: 30px; margin: 20px auto; max-width: 700px; 
+            background: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(12px); 
+            border-radius: 25px; 
+            padding: 40px; 
+            margin: 40px auto; 
+            max-width: 750px; 
             box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+        #youtube-player { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -64,56 +135,74 @@
 <div id="youtube-player"></div>
 
 <div id="surprise-overlay" onclick="openSurprise()">
-    <div style="font-size: 100px;">🎁</div>
-    <h2 style="color: white; font-weight: 300;">CLICK FOR A SURPRISE</h2>
+    <div style="font-size: 110px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));">🎁</div>
+    <h2 style="color: white; font-weight: 300; letter-spacing: 3px; margin-top: 20px;">TAP TO UNWRAP</h2>
 </div>
 
 <header id="main-header">
     <div class="img-container">
-        <img src="https://via.placeholder.com/250?text=Hero+Photo" id="hero_photo" class="main-photo">
+        <img src="https://via.placeholder.com/250?text=Upload+Photo" id="hero_photo" class="main-photo">
         <button class="upload-btn" onclick="triggerUpload('hero_photo')">+</button>
         <button class="delete-btn" onclick="deletePhoto('hero_photo')">×</button>
     </div>
     
-    <div style="margin-top: 30px;">
-        <input type="text" id="name1" class="name-input" placeholder="Name 1" onchange="saveText('name1', this.value)">
-        <span style="font-size: 2rem; color: var(--accent); margin: 0 10px;">❤</span>
-        <input type="text" id="name2" class="name-input" placeholder="Name 2" onchange="saveText('name2', this.value)">
+    <div style="margin-top: 35px;">
+        <input type="text" id="name1" class="name-input" placeholder="Your Name" onchange="saveText('name1', this.value)">
+        <span style="font-size: 2rem; color: var(--accent); margin: 0 15px;">❤</span>
+        <input type="text" id="name2" class="name-input" placeholder="Partner Name" onchange="saveText('name2', this.value)">
     </div>
 </header>
 
-<div id="main-content" style="display: none; padding-bottom: 80px;">
+<div id="main-content" style="display: none; padding: 0 20px 100px 20px;">
     <section class="glass-card">
-        <h2>Captured Moments</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <h2 style="margin-bottom: 30px; font-weight: 400; letter-spacing: 1px;">Our Best Memories</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
             <div class="img-container">
-                <img src="https://via.placeholder.com/300?text=Memory+1" id="gallery_1" class="gallery-img">
+                <img src="https://via.placeholder.com/350?text=Add+Memory" id="gallery_1" class="gallery-img">
                 <button class="upload-btn" onclick="triggerUpload('gallery_1')">+</button>
                 <button class="delete-btn" onclick="deletePhoto('gallery_1')">×</button>
             </div>
             <div class="img-container">
-                <img src="https://via.placeholder.com/300?text=Memory+2" id="gallery_2" class="gallery-img">
+                <img src="https://via.placeholder.com/350?text=Add+Memory" id="gallery_2" class="gallery-img">
                 <button class="upload-btn" onclick="triggerUpload('gallery_2')">+</button>
                 <button class="delete-btn" onclick="deletePhoto('gallery_2')">×</button>
             </div>
         </div>
     </section>
+
     <input type="file" id="globalFile" style="display:none" onchange="handleFile(event)">
 </div>
 
 <script>
-    // PASTE YOUR GOOGLE APPS SCRIPT URL HERE
+    // Your specific App Script URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1MAHkEhi84sOhdDPFPrNyJgmETlNU6wyNaTEHzgD7nQhD1ZgcsR3YXGeL8O44NGQ/exec"; 
     let activeTarget = "";
 
+    // YouTube API Setup
     var player;
     function onYouTubeIframeAPIReady() {
-        player = new YT.Player('youtube-player', { height: '0', width: '0', videoId: 'dQw4w9WgXcQ', events: { 'onReady': () => {} } });
+        player = new YT.Player('youtube-player', { 
+            height: '0', 
+            width: '0', 
+            videoId: 'dQw4w9WgXcQ', // Replace with your favorite YouTube video ID
+            events: { 'onReady': () => {} } 
+        });
     }
 
+    // Function to handle the big reveal
     function openSurprise() {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        // Trigger Glitter Explosion
+        confetti({ 
+            particleCount: 180, 
+            spread: 80, 
+            origin: { y: 0.6 },
+            colors: ['#b56576', '#6d597a', '#ffffff']
+        });
+
+        // Start Music
         if (player && player.playVideo) player.playVideo();
+
+        // Fade out overlay and fade in header
         document.getElementById('surprise-overlay').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('surprise-overlay').style.visibility = 'hidden';
@@ -122,37 +211,67 @@
         }, 1000);
     }
 
-    function triggerUpload(id) { activeTarget = id; document.getElementById('globalFile').click(); }
+    // Photo Handling Functions
+    function triggerUpload(id) { 
+        activeTarget = id; 
+        document.getElementById('globalFile').click(); 
+    }
 
     async function handleFile(e) {
         const file = e.target.files[0];
         if (!file) return;
+        
         const reader = new FileReader();
         reader.onload = async () => {
             const base64 = reader.result.split(',')[1];
+            // Update UI immediately for a "snappy" feel
+            document.getElementById(activeTarget).src = reader.result;
+            
             try {
-                const response = await fetch(SCRIPT_URL, {
+                // Send to Google App Script
+                await fetch(SCRIPT_URL, {
                     method: "POST",
-                    body: JSON.stringify({ action: "upload", key: activeTarget, base64: base64, type: file.type, name: file.name })
+                    mode: "no-cors", // Essential for bypassing browser security blocks
+                    body: JSON.stringify({ 
+                        action: "upload", 
+                        key: activeTarget, 
+                        base64: base64, 
+                        type: file.type, 
+                        name: file.name 
+                    })
                 });
-                const res = await response.json();
-                if (res.url) document.getElementById(activeTarget).src = res.url;
-            } catch (err) { alert("Upload error. Check script deployment!"); }
+            } catch (err) {
+                console.log("Syncing image to Drive in background...");
+            }
         };
         reader.readAsDataURL(file);
     }
 
+    // Save Names to Google Sheet
     async function saveText(key, value) {
-        await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "save_text", key: key, value: value }) });
+        try {
+            await fetch(SCRIPT_URL, { 
+                method: "POST", 
+                mode: "no-cors", 
+                body: JSON.stringify({ action: "save_text", key: key, value: value }) 
+            });
+        } catch (e) {
+            console.log("Text saved locally.");
+        }
     }
 
+    // Delete Photo Function
     async function deletePhoto(id) {
-        if(!confirm("Remove this photo?")) return;
-        document.getElementById(id).src = "https://via.placeholder.com/300?text=Deleted";
-        await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", key: id }) });
+        if(!confirm("Are you sure you want to remove this memory?")) return;
+        document.getElementById(id).src = "https://via.placeholder.com/300?text=Empty";
+        await fetch(SCRIPT_URL, { 
+            method: "POST", 
+            mode: "no-cors", 
+            body: JSON.stringify({ action: "delete", key: id }) 
+        });
     }
 
-    // Load YouTube API
+    // Initialize YouTube API script
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];

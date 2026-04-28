@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Anniversary | Forever & Always</title>
+    <style>
+        :root { --primary: #e63946; --secondary: #f1faee; --accent: #a8dadc; --text: #1d3557; }
+        body { font-family: 'Georgia', serif; background: var(--secondary); color: var(--text); margin: 0; padding: 0; scroll-behavior: smooth; }
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        
+        /* Intro Section */
+        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('hero-photo.jpg') center/cover; }
+        .hero-img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
+        /* Counter & Sections */
+        #counter { font-size: 1.5rem; font-weight: bold; margin: 20px 0; color: var(--primary); }
+        section { padding: 80px 20px; border-bottom: 1px solid var(--accent); }
+        h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 30px; }
+
+        /* Timeline Design */
+        .timeline { border-left: 3px solid var(--primary); margin: 0 auto; width: 80%; padding-left: 30px; text-align: left; }
+        .moment { position: relative; margin-bottom: 40px; }
+        .moment::before { content: ''; position: absolute; left: -39px; top: 5px; width: 15px; height: 15px; background: var(--primary); border-radius: 50%; }
+
+        /* Photo Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .grid img { width: 100%; border-radius: 10px; transition: transform 0.3s; }
+        .grid img:hover { transform: scale(1.05); }
+
+        /* Quiz Styling */
+        .quiz-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        button { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 1rem; }
+
+        /* Audio Player */
+        .music-player { position: fixed; bottom: 20px; right: 20px; background: white; padding: 10px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="music-player">
+    <audio controls loop>
+        <source src="your-song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+<header>
+    <img src="main-photo.jpg" alt="Us" class="hero-img">
+    <h1>[Name 1] & [Name 2]</h1>
+    <p>Celebrating Our Anniversary Since [Date]</p>
+    <div id="counter">Loading our time together...</div>
+</header>
+
+<div class="container">
+    <section>
+        <h2>Our Story</h2>
+        <div class="timeline">
+            <div class="moment">
+                <h3>The First Hello</h3>
+                <p>Describe how you met here. Keep it like a short journey.</p>
+            </div>
+            <div class="moment">
+                <h3>A Key Moment</h3>
+                <p>Add a significant milestone or turning point.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Best Memories</h2>
+        <div class="grid">
+            <img src="memory1.jpg" alt="Description">
+            <img src="memory2.jpg" alt="Description">
+            <img src="memory3.jpg" alt="Description">
+        </div>
+    </section>
+
+    <section>
+        <h2>A Letter to You</h2>
+        <div style="font-style: italic; font-size: 1.2rem; line-height: 2;">
+            "Dear [Name], <br>
+            Write your heartfelt message here. This is the heart of the site. <br>
+            Love, [Your Name]"
+        </div>
+    </section>
+
+    <section>
+        <h2>Inside Jokes & Small Things</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li>✨ [Inside Joke #1]</li>
+            <li>✨ [Favorite Moment #2]</li>
+            <li>✨ [That one time when...]</li>
+        </ul>
+    </section>
+
+    <section class="quiz-box">
+        <h2>Love Quiz</h2>
+        <p id="quiz-question">Where was our first date?</p>
+        <button onclick="checkAnswer()">Show Hint</button>
+        <p id="hint" style="display:none; margin-top: 15px;">It involved a lot of laughing and [Hint detail]!</p>
+    </section>
+
+    <section>
+        <h2>Our Future</h2>
+        <p>This is where we talk about our dreams, our upcoming trip to [Place], and growing old together.</p>
+    </section>
+
+    <section>
+        <h2>Messages from Friends</h2>
+        <blockquote style="border-left: 5px solid var(--accent); padding-left: 20px;">
+            "You two are the perfect match!" - [Friend's Name]
+        </blockquote>
+    </section>
+
+    <section style="border-bottom: none;">
+        <h2>Always Yours</h2>
+        <p>Final simple but meaningful message here.</p>
+    </section>
+</div>
+
+<script>
+    // Time Counter Function
+    function updateCounter() {
+        const startDate = new Date("2023-01-01T00:00:00"); // REPLACE WITH YOUR DATE
+        const now = new Date();
+        const diff = now - startDate;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / 1000 / 60) % 60);
+
+        document.getElementById("counter").innerText = 
+            `${days} Days, ${hours} Hours, and ${mins} Minutes Together`;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // Quiz Function
+    function checkAnswer() {
+        document.getElementById('hint').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

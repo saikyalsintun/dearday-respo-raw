@@ -2,96 +2,122 @@
 <html>
 <head>
   <style>
-    :root { --primary: #4285f4; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-    h2 { color: #333; margin-top: 0; }
-    label { display: block; margin: 10px 0 5px; font-size: 14px; font-weight: bold; }
-    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-    .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-size: 16px; }
-    .btn-secondary { background: #666; margin-top: 10px; }
-    .hidden { display: none; }
+    :root { --primary: #4285f4; --bg: #f8f9fa; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; transition: 0.5s; }
     
-    /* Dynamic Styles for the Generated Page */
-    #page-preview { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    /* DASHBOARD STYLES */
+    .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+    h2 { margin-top: 0; color: #333; text-align: center; }
+    label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: 600; color: #666; }
+    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+    textarea { height: 80px; resize: none; }
+    .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 16px; font-weight: bold; }
+    .btn:hover { opacity: 0.9; }
+    .btn-view { background: #34a853; margin-top: 10px; }
+    hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
+
+    /* GENERATED PAGE STYLES */
+    #page-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .back-btn { position: absolute; top: 20px; left: 20px; padding: 8px 15px; border-radius: 20px; border: 1px solid #333; background: white; cursor: pointer; }
+    #view-img { max-width: 100%; max-height: 300px; border-radius: 10px; margin-bottom: 20px; display: none; }
+    #view-msg { font-size: 1.2rem; line-height: 1.6; max-width: 600px; text-align: center; }
+
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <div id="dashboard" class="container">
-    <h2>Site Dashboard</h2>
+    <h2>Invitation Creator</h2>
     
-    <label>Target Username</label>
-    <input type="text" id="username" placeholder="e.g. party2026">
+    <label>Set Username (Unique ID)</label>
+    <input type="text" id="username" placeholder="e.g. party-01">
 
-    <label>Display Name</label>
-    <input type="text" id="name" class="config" data-key="name">
+    <label>Invitation Title / Name</label>
+    <input type="text" class="config" data-key="title" placeholder="Welcome to my party">
 
-    <label>Message</label>
-    <textarea id="message" class="config" data-key="message"></textarea>
+    <label>Message Content</label>
+    <textarea class="config" data-key="message" placeholder="Type your invite here..."></textarea>
 
-    <label>Theme Color</label>
-    <input type="color" id="bgColor" class="config" data-key="bgColor" value="#ffffff">
+    <label>Background Color</label>
+    <input type="color" class="config" data-key="bgColor" value="#ffffff">
 
     <label>Font Style</label>
-    <select id="font" class="config" data-key="font">
-      <option value="Arial">Sans-Serif</option>
-      <option value="'Times New Roman'">Serif</option>
-      <option value="monospace">Typewriter</option>
+    <select class="config" data-key="font">
+      <option value="'Segoe UI', sans-serif">Modern Clean</option>
+      <option value="'Georgia', serif">Elegant Serif</option>
+      <option value="'Courier New', monospace">Classic Typewriter</option>
+      <option value="'Comic Sans MS', cursive">Playful</option>
     </select>
 
-    <label>Layout Style</label>
-    <select id="layout" class="config" data-key="layout">
-        <option value="center">Centered</option>
-        <option value="flex-start">Top Aligned</option>
-    </select>
+    <label>Image URL (Optional)</label>
+    <input type="text" class="config" data-key="imgUrl" placeholder="https://image-link.com/img.jpg">
 
-    <button class="btn" onclick="publish()">Publish & Save</button>
+    <button class="btn" onclick="saveData()">Save & Create Site</button>
     
-    <hr style="margin: 20px 0;">
+    <hr>
     
-    <input type="text" id="searchUser" placeholder="Enter username to visit...">
-    <button class="btn btn-secondary" onclick="loadUserSite()">View Website</button>
+    <input type="text" id="searchUser" placeholder="Enter username to visit">
+    <button class="btn btn-view" onclick="loadSite()">View Invitation</button>
   </div>
 
-  <div id="page-preview" class="hidden">
-    <button style="position:absolute; top:20px; left:20px;" onclick="location.reload()">Return to Dashboard</button>
-    <h1 id="out-name"></h1>
-    <p id="out-message"></p>
+  <div id="page-view">
+    <button class="back-btn" onclick="closeView()">← Edit/Create New</button>
+    <img id="view-img" src="" alt="Invitation Image">
+    <h1 id="view-title"></h1>
+    <p id="view-msg"></p>
   </div>
 
   <script>
-    function publish() {
+    // 1. SAVE: Collects all inputs and sends to Google Apps Script
+    function saveData() {
       const user = document.getElementById('username').value;
-      if(!user) return alert("Please enter a username");
+      if (!user) return alert("Please enter a username!");
 
-      // Automatically collects EVERYTHING with the class "config"
       const config = {};
-      document.querySelectorAll('.config').forEach(input => {
-        config[input.getAttribute('data-key')] = input.value;
+      // Loop through everything with class "config" and store it
+      document.querySelectorAll('.config').forEach(field => {
+        config[field.getAttribute('data-key')] = field.value;
       });
 
-      google.script.run.withSuccessHandler(msg => alert(msg)).saveWebsite(user, config);
+      google.script.run.withSuccessHandler(msg => {
+        alert(msg);
+      }).saveWebsite(user, config);
     }
 
-    function loadUserSite() {
+    // 2. LOAD: Fetches the JSON config and builds the page dynamically
+    function loadSite() {
       const user = document.getElementById('searchUser').value;
+      if (!user) return alert("Type a username to search");
+
       google.script.run.withSuccessHandler(config => {
-        if(!config) return alert("User not found");
+        if (!config) return alert("User not found in database!");
 
+        // Hide Dashboard, Show Page
         document.getElementById('dashboard').classList.add('hidden');
-        const view = document.getElementById('page-preview');
-        view.classList.remove('hidden');
+        const view = document.getElementById('page-view');
+        view.style.display = 'flex';
 
-        // Apply any settings found in the Config JSON
-        view.style.backgroundColor = config.bgColor;
+        // APPLY THE SETTINGS
+        document.body.style.backgroundColor = config.bgColor;
         view.style.fontFamily = config.font;
-        view.style.justifyContent = config.layout;
-        
-        document.getElementById('out-name').innerText = config.name;
-        document.getElementById('out-message').innerText = config.message;
-        
+        document.getElementById('view-title').innerText = config.title;
+        document.getElementById('view-msg').innerText = config.message;
+
+        // Handle Image
+        const img = document.getElementById('view-img');
+        if (config.imgUrl) {
+          img.src = config.imgUrl;
+          img.style.display = 'block';
+        } else {
+          img.style.display = 'none';
+        }
+
       }).getWebsiteData(user);
+    }
+
+    function closeView() {
+      location.reload(); // Simplest way to reset the dashboard
     }
   </script>
 </body>
